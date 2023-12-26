@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-# theme1 = sns.color_palette("mako", 1)
-
 st.set_page_config(layout= 'wide', page_title= 'Startup Analysis')
 
 df = pd.read_csv('startup_cleaned (1).csv')
@@ -54,7 +52,22 @@ def load_overall_analysis():
         temp_df.set_index('x_axis', inplace=True)
         st.line_chart(data=temp_df, color = sns.color_palette("mako"))
 
+#function for displaying startup analysis
+def load_startup_details(startup):
 
+    st.title(startup)             #name of the startup
+    last5_df_start = df[df['startup'].str.contains(startup)].head()[['date','vertical','subvertical','city','round','amount']]#load investor details
+    st.dataframe(last5_df_start)
+    #stages  (funding rounds)
+    stage = df[df['startup'].str.contains(startup)].groupby('round')['amount'].sum().head(4) * 10000
+    st.subheader('Stage')
+    st.dataframe(stage)
+
+    #investors
+
+    inv = df[df['startup'].str.contains(startup)]['investors']
+    st.subheader('Investor(s)')
+    st.dataframe(inv)
 
 #function for showing investment details
 def load_investor_details(investor):
@@ -99,6 +112,8 @@ def load_investor_details(investor):
 
     #find similar investors
 
+
+
 st.sidebar.title('Startup Funding Analysis')
 option = st.sidebar.selectbox('Select One', ['Overall Analysis' , 'Startup' , 'Investor'])
 
@@ -107,8 +122,10 @@ if option == 'Overall Analysis':
 
 elif option == 'Startup':
     st.title('Startup Analysis')
-    st.sidebar.selectbox('Select Startup', df['startup'].unique().tolist())
+    selected_startup = st.sidebar.selectbox('Select Startup', df['startup'].unique().tolist())
     btn1 = st.sidebar.button('Find Startup Details')
+    if btn1:
+        load_startup_details(selected_startup)
 
 else:
     st.title('Investor Analysis')
