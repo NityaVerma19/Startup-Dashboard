@@ -64,53 +64,50 @@ def load_overall_analysis():
     st.plotly_chart(fig6)
 
 
-    col9,col10 = st.columns(2)
+    st.subheader('Top Startup')
+    grouped_df = df.groupby(['year', 'startup'])['amount'].sum().reset_index()
+    selected_year= st.slider('Choose a year', 2015,2020,2015)
+    if selected_year == 2015:
+        top_5= grouped_df.query('year == 2015')
+        st.dataframe(top_5)
+    elif selected_year == 2016:
+        top_5 = grouped_df.query('year == 2016').head(5)
+        st.dataframe(top_5)
+    elif selected_year == 2017:
+        top_5 = grouped_df.query('year == 2017').head(5)
+        st.dataframe(top_5)
+    elif selected_year == 2018:
+        top_5 = grouped_df.query('year == 2018').head(5)
+        st.dataframe(top_5)
+    elif selected_year == 2019:
+        top_5 = grouped_df.query('year == 2019').head(5)
+        st.dataframe(top_5)
+    elif selected_year == 2020:
+        top_5 = grouped_df.query('year == 2020').head(5)
+        st.dataframe(top_5)
 
-    with col9:
-        st.subheader('Top Startup')
-        grouped_df = df.groupby(['year', 'startup'])['amount'].sum().reset_index()
-        selected_year= st.slider('Choose a year', 2015,2020,2015)
-        if selected_year == 2015:
-            top_5= grouped_df.query('year == 2015')
-            st.dataframe(top_5)
-        elif selected_year == 2016:
-            top_5 = grouped_df.query('year == 2016').head(5)
-            st.dataframe(top_5)
-        elif selected_year == 2017:
-            top_5 = grouped_df.query('year == 2017').head(5)
-            st.dataframe(top_5)
-        elif selected_year == 2018:
-            top_5 = grouped_df.query('year == 2018').head(5)
-            st.dataframe(top_5)
-        elif selected_year == 2019:
-            top_5 = grouped_df.query('year == 2019').head(5)
-            st.dataframe(top_5)
-        elif selected_year == 2020:
-            top_5 = grouped_df.query('year == 2020').head(5)
-            st.dataframe(top_5)
 
-    with col10:
-        st.subheader('Top Investors')
-        grouped_df_inv = df.groupby(['year', 'investors'])['amount'].sum().reset_index()
-        selected_year_inv = st.slider('Choose year', 2015, 2020, 2015)
-        if selected_year_inv == 2015:
-            top_5 = grouped_df_inv.query('year == 2015')
-            st.dataframe(top_5)
-        elif selected_year_inv == 2016:
-            top_5 = grouped_df_inv.query('year == 2016').head(5)
-            st.dataframe(top_5)
-        elif selected_year_inv == 2017:
-            top_5 = grouped_df_inv.query('year == 2017').head(5)
-            st.dataframe(top_5)
-        elif selected_year_inv == 2018:
-            top_5 = grouped_df_inv.query('year == 2018').head(5)
-            st.dataframe(top_5)
-        elif selected_year_inv == 2019:
-            top_5 = grouped_df_inv.query('year == 2019').head(5)
-            st.dataframe(top_5)
-        elif selected_year_inv == 2020:
-            top_5 = grouped_df_inv.query('year == 2020').head(5)
-            st.dataframe(top_5)
+    st.subheader('Top Investors')
+    grouped_df_inv = df.groupby(['year', 'investors'])['amount'].sum().reset_index()
+    selected_year_inv = st.slider('Choose year', 2015, 2020, 2015)
+    if selected_year_inv == 2015:
+        top_5 = grouped_df_inv.query('year == 2015')
+        st.dataframe(top_5)
+    elif selected_year_inv == 2016:
+        top_5 = grouped_df_inv.query('year == 2016').head(5)
+        st.dataframe(top_5)
+    elif selected_year_inv == 2017:
+        top_5 = grouped_df_inv.query('year == 2017').head(5)
+        st.dataframe(top_5)
+    elif selected_year_inv == 2018:
+        top_5 = grouped_df_inv.query('year == 2018').head(5)
+        st.dataframe(top_5)
+    elif selected_year_inv == 2019:
+        top_5 = grouped_df_inv.query('year == 2019').head(5)
+        st.dataframe(top_5)
+    elif selected_year_inv == 2020:
+        top_5 = grouped_df_inv.query('year == 2020').head(5)
+        st.dataframe(top_5)
 
 
 
