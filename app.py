@@ -67,8 +67,10 @@ def load_overall_analysis():
     st.subheader('Top Startup')
     grouped_df = df.groupby(['year', 'startup'])['amount'].sum().reset_index()
     selected_year= st.slider('Choose a year', 2015,2020,2015)
+
     if selected_year == 2015:
         top_5= grouped_df.query('year == 2015')
+
         st.dataframe(top_5)
     elif selected_year == 2016:
         top_5 = grouped_df.query('year == 2016').head(5)
