@@ -7,6 +7,46 @@ st.set_page_config(layout= 'wide', page_title= 'Startup Analysis')
 
 df = pd.read_csv('startup_cleaned (1).csv')
 df['date'] = pd.to_datetime(df['date'], errors='coerce')
+df['month'] = df['date'].dt.month
+
+
+#function for displaying overall analysis
+def load_overall_analysis():
+    st.title('Overall Analysis')
+
+    #total invested amount
+    total = round(df['amount'].sum())
+
+    #max amount infused in a startup
+    max_funding = round(df.groupby('startup')['amount'].max().sort_values(ascending= False).head(1).values[0] * 10)
+
+    #average ticket size
+    avg_funding = round(df.groupby('startup')['amount'].sum().mean() * 1000)
+
+
+    col1, col2, col3 = st.columns(3, gap = 'medium')
+    with col1:
+        st.metric('Total', str(total) + 'Cr')
+    with col2:
+        st.metric('Maximum', str(max_funding) + 'Cr')
+    with col3:
+        st.metric('Average', str(avg_funding) + 'Cr')
+
+
+    st.header('Month on Month Graph')
+    selected_option = st.selectbox('Select type', ['Total', 'Count'])
+    if selected_option == 'Total':
+        temp_df = df.groupby(['year', 'month'])['amount'].sum().reset_index()
+        temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
+        fig5, ax5 = plt.subplots()
+        ax5.plot(temp_df['x_axis'], temp_df['amount'])
+        st.pyplot(fig5)
+    else:
+        temp_df = df.groupby(['year', 'month'])['amount'].count().reset_index()
+        temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
+        fig5, ax5 = plt.subplots()
+        ax5.plot(temp_df['x_axis'], temp_df['amount'])
+        st.pyplot(fig5)
 
 
 #function for showing investment details
@@ -53,16 +93,13 @@ def load_investor_details(investor):
     ax4.plot(year_series.index,year_series.values)
     st.pyplot(fig4)
 
-
-
-
-
+    #find similar investors
 
 st.sidebar.title('Startup Funding Analysis')
 option = st.sidebar.selectbox('Select One', ['Overall Analysis' , 'Startup' , 'Investor'])
 
 if option == 'Overall Analysis':
-    st.title('Overall Analysis')
+        load_overall_analysis()
 
 elif option == 'Startup':
     st.title('Startup Analysis')
