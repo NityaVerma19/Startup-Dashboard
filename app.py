@@ -3,14 +3,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+
 
 
 st.set_page_config(layout= 'wide', page_title= 'Startup Analysis')
 
 df = pd.read_csv('startup_cleaned (1).csv')
 df['date'] = pd.to_datetime(df['date'], errors='coerce')
-df['month'] = df['date'].dt.month
-
+df['month'] = df['date'].dt.month_name()
 
 #function for displaying overall analysis
 def load_overall_analysis():
@@ -39,7 +40,7 @@ def load_overall_analysis():
     selected_option = st.selectbox('Select type', ['Total', 'Count'])
     if selected_option == 'Total':
         temp_df = df.groupby(['year', 'month'])['amount'].sum().reset_index()
-        temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
+        temp_df['x_axis'] = temp_df['month'].astype('str') + ' ' + temp_df['year'].astype('str')
         temp_df.drop(columns=['year', 'month'], inplace=True)
         temp_df.set_index('x_axis', inplace=True)
         st.line_chart(data=temp_df , color = sns.color_palette("mako", 1))
@@ -76,7 +77,7 @@ def load_investor_details(investor):
     st.subheader('Most recent investments')
     st.dataframe(last5_df)
 
-    col1, col2, col3, col4 = st.columns(4, gap = 'small')  #to reduce the space taken by the bar chart, we can divide the page into two columns
+    col1, col2 = st.columns(2, gap = 'large')  #to reduce the space taken by the bar chart, we can divide the page into two columns
     with col1:
         #biggest investments - bar chart
         big_series = df[df['investors'].str.contains(investor)].groupby('startup')['amount'].sum().sort_values(ascending=False).head()
@@ -87,23 +88,38 @@ def load_investor_details(investor):
     with col2:
         vertical_series = df[df['investors'].str.contains(investor)].groupby('vertical')['amount'].sum().head(4)
         st.subheader('Sectors invested')
-        fig1, ax1 = plt.subplots()
-        ax1.pie(vertical_series , labels = vertical_series.index , colors = sns.color_palette("mako", 4))
-        st.pyplot(fig1)
+        fig1 = px.pie(
+            hole=0.4,
+            labels=vertical_series.index,
+            names= vertical_series.index,
+            color_discrete_sequence= px.colors.sequential.Tealgrn_r)
+        st.plotly_chart(fig1)
 
+
+    col3, col4 = st.columns([0.1, 0.1], gap='small')
     with col3:
         stages_series = df[df['investors'].str.contains(investor)].groupby('round')['amount'].sum().head(4)
         st.subheader('Stages invested')
-        fig2, ax2 = plt.subplots()
-        ax2.pie(stages_series , labels = stages_series.index , colors = sns.color_palette("mako", 4))
-        st.pyplot(fig2)
+        fig2 = px.pie(
+            hole=0.4,
+            labels=stages_series.index,
+            names= stages_series.index,
+            color_discrete_sequence=px.colors.sequential.Tealgrn
+        )
+
+        st.plotly_chart(fig2)
 
     with col4:
-        city_series = df[df['investors'].str.contains(investor)].groupby('city')['amount'].sum().head(4)
+        city_series = df[df['investors'].str.contains(investor)].groupby('city')['amount'].sum().head(2)
         st.subheader('Cities')
-        fig3, ax3 = plt.subplots()
-        ax3.pie(city_series , labels = city_series.index , colors = sns.color_palette("mako", 4))
-        st.pyplot(fig3)
+        fig3 = px.pie(
+            hole=0.4,
+            labels=city_series.index,
+            names= city_series.index,
+            color_discrete_sequence=px.colors.sequential.Teal
+        )
+
+        st.plotly_chart(fig3)
 
     df['year'] = df['date'].dt.year
     year_series = df[df['investors'].str.contains(investor)].groupby('year')['amount'].sum()
