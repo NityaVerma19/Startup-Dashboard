@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# theme1 = sns.color_palette("mako", 1)
 
 st.set_page_config(layout= 'wide', page_title= 'Startup Analysis')
 
@@ -40,7 +44,7 @@ def load_overall_analysis():
         temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
         temp_df.drop(columns=['year', 'month'], inplace=True)
         temp_df.set_index('x_axis', inplace=True)
-        st.line_chart(data=temp_df)
+        st.line_chart(data=temp_df , color = sns.color_palette("mako", 1))
 
 
     else:
@@ -48,7 +52,7 @@ def load_overall_analysis():
         temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
         temp_df.drop(columns=['year', 'month'], inplace=True)
         temp_df.set_index('x_axis', inplace=True)
-        st.line_chart(data=temp_df)
+        st.line_chart(data=temp_df, color = sns.color_palette("mako"))
 
 
 
@@ -64,37 +68,34 @@ def load_investor_details(investor):
         #biggest investments - bar chart
         big_series = df[df['investors'].str.contains(investor)].groupby('startup')['amount'].sum().sort_values(ascending=False).head()
         st.subheader('Biggest Investments')
-        fig, ax = plt.subplots()
-        ax.bar(big_series.index , big_series.values)
-        st.pyplot(fig)
+        st.bar_chart(data = big_series, color = sns.color_palette("mako", 1))
+
 
     with col2:
-        vertical_series = df[df['investors'].str.contains(investor)].groupby('vertical')['amount'].sum().head()
+        vertical_series = df[df['investors'].str.contains(investor)].groupby('vertical')['amount'].sum().head(4)
         st.subheader('Sectors invested')
         fig1, ax1 = plt.subplots()
-        ax1.pie(vertical_series , labels = vertical_series.index )
+        ax1.pie(vertical_series , labels = vertical_series.index , colors = sns.color_palette("mako", 4))
         st.pyplot(fig1)
 
     with col3:
-        stages_series = df[df['investors'].str.contains(investor)].groupby('round')['amount'].sum().head()
-        st.subheader('Sectors invested')
+        stages_series = df[df['investors'].str.contains(investor)].groupby('round')['amount'].sum().head(4)
+        st.subheader('Stages invested')
         fig2, ax2 = plt.subplots()
-        ax2.pie(stages_series , labels = stages_series.index )
+        ax2.pie(stages_series , labels = stages_series.index , colors = sns.color_palette("mako", 4))
         st.pyplot(fig2)
 
     with col4:
-        city_series = df[df['investors'].str.contains(investor)].groupby('city')['amount'].sum().head()
+        city_series = df[df['investors'].str.contains(investor)].groupby('city')['amount'].sum().head(4)
         st.subheader('Cities')
         fig3, ax3 = plt.subplots()
-        ax3.pie(city_series , labels = city_series.index )
+        ax3.pie(city_series , labels = city_series.index , colors = sns.color_palette("mako", 4))
         st.pyplot(fig3)
 
     df['year'] = df['date'].dt.year
     year_series = df[df['investors'].str.contains(investor)].groupby('year')['amount'].sum()
     st.subheader('Year on Year Investement')
-    fig4, ax4 = plt.subplots()
-    ax4.plot(year_series.index,year_series.values)
-    st.pyplot(fig4)
+    st.line_chart(year_series, color= sns.color_palette("mako", 1))
 
     #find similar investors
 
