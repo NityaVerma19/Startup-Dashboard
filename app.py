@@ -77,7 +77,7 @@ def load_investor_details(investor):
     st.subheader('Most recent investments')
     st.dataframe(last5_df)
 
-    col1, col2 = st.columns(2, gap = 'large')  #to reduce the space taken by the bar chart, we can divide the page into two columns
+    col1 , col , col2 = st.columns([0.2,0.1,0.2], gap = 'small')  #to reduce the space taken by the bar chart, we can divide the page into two columns
     with col1:
         #biggest investments - bar chart
         big_series = df[df['investors'].str.contains(investor)].groupby('startup')['amount'].sum().sort_values(ascending=False).head()
@@ -96,7 +96,7 @@ def load_investor_details(investor):
         st.plotly_chart(fig1)
 
 
-    col3, col4 = st.columns([0.1, 0.1], gap='small')
+    col3, cole ,col4 = st.columns([0.2,0.1,0.2], gap='small')
     with col3:
         stages_series = df[df['investors'].str.contains(investor)].groupby('round')['amount'].sum().head(4)
         st.subheader('Stages invested')
