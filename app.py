@@ -38,15 +38,18 @@ def load_overall_analysis():
     if selected_option == 'Total':
         temp_df = df.groupby(['year', 'month'])['amount'].sum().reset_index()
         temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
-        fig5, ax5 = plt.subplots()
-        ax5.plot(temp_df['x_axis'], temp_df['amount'])
-        st.pyplot(fig5)
+        temp_df.drop(columns=['year', 'month'], inplace=True)
+        temp_df.set_index('x_axis', inplace=True)
+        st.line_chart(data=temp_df)
+
+
     else:
         temp_df = df.groupby(['year', 'month'])['amount'].count().reset_index()
         temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
-        fig5, ax5 = plt.subplots()
-        ax5.plot(temp_df['x_axis'], temp_df['amount'])
-        st.pyplot(fig5)
+        temp_df.drop(columns=['year', 'month'], inplace=True)
+        temp_df.set_index('x_axis', inplace=True)
+        st.line_chart(data=temp_df)
+
 
 
 #function for showing investment details
