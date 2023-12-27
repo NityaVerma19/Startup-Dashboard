@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
 
 
@@ -42,7 +39,7 @@ def load_overall_analysis():
         temp_df['x_axis'] = temp_df['month'].astype('str') + ' ' + temp_df['year'].astype('str')
         temp_df.drop(columns=['year', 'month'], inplace=True)
         temp_df.set_index('x_axis', inplace=True)
-        st.line_chart(data=temp_df , color = sns.color_palette("mako", 1))
+        st.line_chart(data=temp_df)
 
 
     else:
@@ -50,7 +47,7 @@ def load_overall_analysis():
         temp_df['x_axis'] = temp_df['month'].astype('str') + '-' + temp_df['year'].astype('str')
         temp_df.drop(columns=['year', 'month'], inplace=True)
         temp_df.set_index('x_axis', inplace=True)
-        st.line_chart(data=temp_df, color = sns.color_palette("mako"))
+        st.line_chart(data=temp_df)
 
 
 
@@ -142,7 +139,7 @@ def load_investor_details(investor):
         #biggest investments - bar chart
         big_series = df[df['investors'].str.contains(investor)].groupby('startup')['amount'].sum().sort_values(ascending=False).head()
         st.subheader('Biggest Investments')
-        st.bar_chart(data = big_series, color = sns.color_palette("mako", 1))
+        st.bar_chart(data = big_series)
 
 
     with col2:
@@ -184,7 +181,7 @@ def load_investor_details(investor):
     df['year'] = df['date'].dt.year
     year_series = df[df['investors'].str.contains(investor)].groupby('year')['amount'].sum()
     st.subheader('Year on Year Investement')
-    st.line_chart(year_series, color= sns.color_palette("mako", 1))
+    st.line_chart(year_series)
 
     #find similar investors
 
